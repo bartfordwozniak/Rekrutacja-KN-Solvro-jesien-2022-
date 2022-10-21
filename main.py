@@ -10,8 +10,10 @@ import sklearn
 import jax, jaxlib
 
 
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    #naprawa pewnego błędu, zapożyczone z stackoverflow
+#import os
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    #naprawa pewnego błędu, zapożyczone z stackoverflow
+
+
 
 #print(tf.__version__)
 
@@ -36,6 +38,12 @@ test_data = np.load('data_sets/X_test.npy',
                        #fix_imports = True,
                        encoding = 'ASCII')
 
+# test_labels = np.load('data_sets/y_test.npy',
+#                        mmap_mode = None,
+#                        allow_pickle = False,
+#                        #fix_imports = True,
+#                        encoding = 'ASCII')
+
 val_data = np.load('data_sets/X_val.npy',
                        mmap_mode = None,
                        allow_pickle = False,
@@ -49,7 +57,7 @@ val_labels = np.load('data_sets/y_val.npy',
                        encoding = 'ASCII')
                         #encoding = 'OneHot')
 
-model = tf.keras.Sequential ([ tf.keras.layers.Flatten(input_shape=(None, 300, 2)),
+model = tf.keras.Sequential ([ tf.keras.layers.Flatten(input_shape=(300, 2)),  #(None, 300, 2)
                              tf.keras.layers.Dense(4, activation="relu"),
                              tf.keras.layers.Dense(4, activation="relu"),
                              #tf.keras.layers.Dense(4, activation="relu"),
@@ -62,5 +70,8 @@ model.compile(  loss = tf.keras.losses.SparseCategoricalCrossentropy(),
 
 model.fit (train_data, train_labels, epochs=5)
 
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 
-#
+print('\nTest accuracy:', test_acc)
+
+
