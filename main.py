@@ -23,6 +23,8 @@ train_data = np.load('data_sets/X_train.npy',
                        #fix_imports = True,
                        encoding = 'ASCII')
 
+train_data = train_data/255
+
 train_labels = np.load('data_sets/y_train.npy',
                        mmap_mode = None,
                        allow_pickle = False,
@@ -36,6 +38,8 @@ test_data = np.load('data_sets/X_test.npy',
                        #fix_imports = True,
                        encoding = 'ASCII')
 
+test_data = test_data/255
+
 # test_labels = np.load('data_sets/y_test.npy',
 #                        mmap_mode = None,
 #                        allow_pickle = False,
@@ -47,6 +51,8 @@ val_data = np.load('data_sets/X_val.npy',
                        allow_pickle = False,
                        #fix_imports = True,
                        encoding = 'ASCII')
+
+val_data = val_data/255
 
 val_labels = np.load('data_sets/y_val.npy',
                        mmap_mode = None,
