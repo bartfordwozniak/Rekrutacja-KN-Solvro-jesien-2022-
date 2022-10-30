@@ -10,7 +10,7 @@ import numpy as np
 from tensorflow import keras
 from matplotlib import pyplot as plt
 import pandas as pd
-import csv, odt
+import csv, ods
 
 # from livelossplot import PlotLossesKeras
 
@@ -127,7 +127,7 @@ print(model.metrics)
 
 #dataframe = pd.write_csv(csv_file)
 
-file = open('score.odt', "w")
+file = open('score.ods', "w")
 # header = ['index', 'class']
 # writer.writerow(header)
 number_of_records = len(test_data)
