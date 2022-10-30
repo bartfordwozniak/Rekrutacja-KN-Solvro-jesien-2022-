@@ -10,6 +10,7 @@ import numpy as np
 from tensorflow import keras
 from matplotlib import pyplot as plt
 import pandas as pd
+import csv
 
 # from livelossplot import PlotLossesKeras
 
@@ -20,7 +21,8 @@ import pandas as pd
 train_data = np.load ('data_sets/X_train.npy',
                        mmap_mode = None,
                        allow_pickle = False,
-                       fix_imports = True)
+                       fix_imports = True,
+                       encoding = 'ASCII')
 
 train_labels = np.load ('data_sets/y_train.npy',
                        mmap_mode = None,
@@ -33,12 +35,6 @@ test_data = np.load ('data_sets/X_test.npy',
                        allow_pickle = False,
                        fix_imports = True,
                        encoding = 'ASCII')
-
-# test_labels = np.load('data_sets/y_test.npy',
-#                        mmap_mode = None,
-#                        allow_pickle = False,
-#                        #fix_imports = True,
-#                        encoding = 'ASCII')
 
 val_data = np.load ('data_sets/X_val.npy',
                        mmap_mode = None,
@@ -54,7 +50,7 @@ val_labels = np.load ('data_sets/y_val.npy',
 
 #----------------------------------------------------ARCHITEKTURA-----------------------------------------------------
 
-model = keras.Sequential ([ keras.layers.Flatten(input_shape = (300, 2)),  #(None, 300, 2)
+model = keras.Sequential ([ keras.layers.Flatten(input_shape = (None, 300, 2)),
                             keras.layers.Dense(128, activation = "relu"),
                             keras.layers.Dense(256, activation = "selu"),
                             keras.layers.Dense(256, activation = "sigmoid"),
@@ -68,20 +64,31 @@ model.compile (loss = 'categorical_crossentropy',
                optimizer = optimalizer,
                metrics=['Accuracy'])
 
+model.summary()
+
+
+
 #-------------------------------------------------------TRENING-------------------------------------------------
 
 model.fit(train_data,
           train_labels,
           epochs = 3,
-          batch_size = 4,
-          #validation_data=(),
-          verbose=1,
-          shuffle=True,
-          #callbacks=callbacks_list
+          batch_size = 16,
           )
 
 
 print(model.metrics)
+
+# loss, acc = model.evaluate(val_data, val_labels, verbose=2)
+# print("Untrained model, accuracy: {:5.2f}%".format(100 * acc))
+
+#model.load_weights(checkpoint_path)
+
+# loss, acc = model.evaluate(val_data, val_labels, verbose=2)
+# print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
+
+#!mkdir -p saved_model
+#model.save('saved_model/my_model')
 
 
 
@@ -118,6 +125,19 @@ print(model.metrics)
 
 #-------------------------------------------------------KLASYFIKACJA----------------------------
 
-dataframe = pd.write_csv(csv_file)
-col_names = ['index',
-             'class',]
+#dataframe = pd.write_csv(csv_file)
+
+file = open('score.csv', "w")
+# header = ['index', 'class']
+# writer.writerow(header)
+number_of_records = len(test_data)
+for i in range (0, number_of_records):
+    index = i
+    prediction = model.fit(test_data[index])   # fit ????? jakie coś tu musi być?
+    #file.writerow([index, prediction])
+    file.write([index, prediction])
+
+# classification = pd.DataFrame([ ], columns = ['index', 'class'])
+# classification.to_csv('score.csv')
+
+file.close()
